@@ -3,17 +3,18 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 )
 
 func main() {
-	var arrNumber = []int{1, 4, 5, 6, 8, 2}
+	arrNumber := []int{1, 4, 5, 6, 8, 2}
 	max := math.MinInt64
 	barChartVerticaly(arrNumber)
 	fmt.Println()
 
 	// Insertion sort ascending
 	fmt.Println()
-	insertionSort(arrNumber)
+	insertionSortAsc(arrNumber)
 
 	// Find the maximum to determine the suitable grid to plot the Histogram
 	for _, e := range arrNumber {
@@ -55,6 +56,53 @@ func main() {
 	}
 
 	for i := 0; i < colmn; i++ {
+		fmt.Printf(" %d ", arrNumber[i])
+	}
+	fmt.Println()
+
+	// Insertion sort Desc
+	fmt.Println()
+	insertionSortDesc(arrNumber)
+	// Find the maximum to determine the suitable grid to plot the Histogram
+	for _, e := range arrNumber {
+		if e > max {
+			max = e
+		}
+	}
+	var (
+		baris = max
+		kolom = len(arrNumber)
+	)
+
+	// Create grind of dimension (row * colmn)
+	// Allocate rows
+	histogramss := make([][]string, rows)
+	for i := 0; i < baris; i++ {
+		// Allocate column for each row
+		histogramss[i] = make([]string, kolom)
+	}
+
+	// Histogram formation logic
+	// use blank spaces ("	") or "  |  " to fill the grid
+	for i, e := range arrNumber {
+		for j := baris - 1; j >= 0; j-- {
+			if j >= baris-e {
+				histogramss[j][i] = " | "
+			} else {
+				histogramss[j][i] = "   "
+			}
+		}
+	}
+
+	// Print the histogram
+	for i := 0; i < baris; i++ {
+		for j := 0; j < kolom; j++ {
+			fmt.Printf("%s", histogramss[i][j])
+		}
+		fmt.Println()
+	}
+
+	for i := 0; i < kolom; i++ {
 		fmt.Printf(" %d ", arrNumber[i])
 	}
 
@@ -106,7 +154,7 @@ func barChartVerticaly(arrNumber []int) {
 	}
 }
 
-func insertionSort(arrNum []int) {
+func insertionSortAsc(arrNum []int) {
 	for i := 0; i < len(arrNum); i++ {
 		tmp := arrNum[i]
 		j := i
@@ -116,4 +164,8 @@ func insertionSort(arrNum []int) {
 		}
 		arrNum[j] = tmp
 	}
+}
+
+func insertionSortDesc(arrNumber []int) {
+	sort.Sort(sort.Reverse(sort.IntSlice(arrNumber)))
 }
